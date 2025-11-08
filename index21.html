@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Online Bookstore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .filter-buttons {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      margin: 0 10px;
+      padding: 8px 16px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .book-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .book {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 230px;
+      transition: transform 0.2s;
+    }
+    .book:hover {
+      transform: translateY(-5px);
+    }
+    .book-title {
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 8px;
+    }
+    .book-author, .book-publisher {
+      color: #666;
+      margin-bottom: 6px;
+      font-size: 0.9em;
+    }
+    .book-price {
+      color: #008000;
+      font-weight: bold;
+    }
+    .book-category {
+      margin-top: 6px;
+      background: #eee;
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Online Bookstore</h1>
+
+  <div class="filter-buttons">
+    <button id="show-all">All Books</button>
+    <button id="show-programming">Programming</button>
+    <button id="show-selfhelp">Self-Help</button>
+    <button id="show-fiction">Fiction</button>
+    <button id="show-business">Business</button>
+  </div>
+
+  <div class="book-list" id="bookList"></div>
+
+  <script type="module">
+    // =============================
+    // 📘 Book Data (JSON-like array)
+    // =============================
+    const bookData = [
+      {
+        "id": 1,
+        "title": "Eloquent JavaScript",
+        "author": "Marijn Haverbeke",
+        "publisher": "No Starch Press",
+        "price": 25.99,
+        "category": "Programming"
+      },
+      {
+        "id": 2,
+        "title": "Clean Code",
+        "author": "Robert C. Martin",
+        "publisher": "Prentice Hall",
+        "price": 29.99,
+        "category": "Programming"
+      },
+      {
+        "id": 3,
+        "title": "JavaScript: The Good Parts",
+        "author": "Douglas Crockford",
+        "publisher": "O'Reilly Media",
+        "price": 22.50,
+        "category": "Programming"
+      },
+      {
+        "id": 4,
+        "title": "Atomic Habits",
+        "author": "James Clear",
+        "publisher": "Avery",
+        "price": 18.99,
+        "category": "Self-Help"
+      },
+      {
+        "id": 5,
+        "title": "The 7 Habits of Highly Effective People",
+        "author": "Stephen R. Covey",
+        "publisher": "Free Press",
+        "price": 21.99,
+        "category": "Self-Help"
+      },
+      {
+        "id": 6,
+        "title": "Deep Work",
+        "author": "Cal Newport",
+        "publisher": "Grand Central Publishing",
+        "price": 23.75,
+        "category": "Self-Help"
+      },
+      {
+        "id": 7,
+        "title": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "publisher": "Harper Perennial",
+        "price": 14.99,
+        "category": "Fiction"
+      },
+      {
+        "id": 8,
+        "title": "1984",
+        "author": "George Orwell",
+        "publisher": "Signet Classics",
+        "price": 13.50,
+        "category": "Fiction"
+      },
+      {
+        "id": 9,
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "publisher": "Scribner",
+        "price": 16.00,
+        "category": "Fiction"
+      },
+      {
+        "id": 10,
+        "title": "The Lean Startup",
+        "author": "Eric Ries",
+        "publisher": "Crown Business",
+        "price": 26.99,
+        "category": "Business"
+      }
+    ];
+
+    // =============================
+    // utils.js — display function
+    // =============================
+    function displayBooks(books) {
+      const container = document.getElementById('bookList');
+      container.innerHTML = ''; // Clear previous books
+
+      books.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book';
+        div.innerHTML = `
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">👤 ${book.author}</div>
+          <div class="book-publisher">🏢 ${book.publisher}</div>
+          <div class="book-price">💲${book.price.toFixed(2)}</div>
+          <div class="book-category">${book.category}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // =============================
+    // books.js — data handling
+    // =============================
+    function getAllBooks() {
+      return bookData;
+    }
+
+    function filterByCategory(books, category) {
+      return books.filter(b => b.category === category);
+    }
+
+    // =============================
+    // app.js — main application
+    // =============================
+    const allBooks = getAllBooks();
+    displayBooks(allBooks); // show all initially
+
+    document.getElementById('show-all').addEventListener('click', () => {
+      displayBooks(allBooks);
+    });
+
+    document.getElementById('show-programming').addEventListener('click', () => {
+      displayBooks(filterByCategory(allBooks, 'Programming'));
+    });
+
+    document.getElementById('show-selfhelp').addEventListener('click', () => {
+      displayBooks(filterByCategory(allBooks, 'Self-Help'));
+    });
+
+    document.getElementById('show-fiction').addEventListener('click', () => {
+      displayBooks(filterByCategory(allBooks, 'Fiction'));
+    });
+
+    document.getElementById('show-business').addEventListener('click', () => {
+      displayBooks(filterByCategory(allBooks, 'Business'));
+    });
+  </script>
+</body>
+</html>
